@@ -5,16 +5,16 @@ archivesBaseName = rootProject.archives_base_name + "-fabric"
 dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+
+	implementation project(":WCShared")
     
     modImplementation "curse.maven:modmenu-308702:${rootProject.mod_menu_release}"
 	modCompileOnly "curse.maven:morebanners-515000:3453480"
-	modCompileOnly "curse.maven:minecraftcapes-mod-359836:3409502"
-
-    sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
-	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)
+	modCompileOnly "curse.maven:minecraftcapes-mod-359836:3574423"
 }
 
 processResources {
+	from project(":WCShared").sourceSets.main.resources
 	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	inputs.property "version", project.version
 
@@ -22,5 +22,8 @@ processResources {
 		include "fabric.mod.json"
 		expand "version": project.version
 	}
+}
 
+tasks.withType(JavaCompile) {
+	source(project(":WCShared").sourceSets.main.allSource)
 }

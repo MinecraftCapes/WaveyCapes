@@ -3,15 +3,18 @@ project.evaluationDependsOn(':WCShared')
 archivesBaseName = rootProject.archives_base_name + "-forge"
 
 dependencies {
+    compileOnly project(':WCShared')
+
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
-    modImplementation "curse.maven:minecraftcapes-mod-359836:3542122"
-
-    sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
-	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)
+    //MinecraftCapes and Auth for testing
+    modImplementation "curse.maven:minecraftcapes-mod-359836:3574424"
+    modImplementation "curse.maven:oauth-513857:3587914"
 }
 
 processResources {
+    from project(":WCShared").sourceSets.main.resources
+
     inputs.property "version", project.version
 
     filesMatching("META-INF/mods.toml") {
@@ -21,6 +24,10 @@ processResources {
 
 loom {
     forge.mixinConfigs "${modid}.mixins.json"
+}
+
+tasks.withType(JavaCompile) {
+    source(project(":WCShared").sourceSets.main.allSource)
 }
 
 jar {
